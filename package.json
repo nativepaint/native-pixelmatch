@@ -19,6 +19,9 @@
     "@types/node": "^12.7.2",
     "@types/pixelmatch": "^5.0.0",
     "@types/pngjs": "^3.3.2",
-    "typescript": "^3.5.3"
+    "mem": "^5.1.1",
+    "os-locale": "^4.0.0",
+    "typescript": "^3.5.3",
+    "yargs": "^14.0.0"
   }
 }
