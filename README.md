@@ -12,6 +12,7 @@
 - [Example Output](#Example-Output)
 - [The Problem](#The-Problem)
 - [The Solution](#The-Solution)
+- [How to Use](#How-to-Use)
 - [Similar Solutions](#Similar-Solutions)
 
 ## The Problem
@@ -33,6 +34,29 @@ Introducing `native-pixelmatch` a lightweight solution for visual regression on 
 | --- | --- | --- |
 | ![](other/ios-1.png) | ![](other/ios-2.png) | ![1diff](other/ios-diff.png) |
 
+## How to Use
+
+**Import native-pixelmatch and save the library's config prototype as a exportable variable
+```
+import nativePixelMatch from 'native-pixelmatch'
+
+export const screenshotConfig = new nativePixelMatch(
+	'temp',
+	'shots',
+	'screenshot_testing',
+	'detox',
+)
+```
+
+Import this exported config throughout the project
+```
+describe('App', () => {
+	it('should create a picture', () => {
+		screenshotConfig.createScreenshot('App', App-Button-Click)
+		screenshotConfig.pixelDiff('App', App-Button-Click)
+	})
+})
+```
 ## Similar Solutions
 - [Loki Storybook Visual Diffing](https://github.com/oblador/loki) 
 
