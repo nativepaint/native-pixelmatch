@@ -1,4 +1,4 @@
-import * as childProcess from 'child_process'
+import { execSync } from 'child_process'
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 import pixelMatch from 'pixelmatch'
@@ -18,12 +18,28 @@ const SCREENSHOT_OPTIONS = {
 
 let screenshotIndex = 0
 
+export const getDevicePlatform = () => {
+	if (driver){
+		// appium
+		return driver.getCapabilities().getCapability("platformName")
+	}
+	if (device){
+		// detox
+		return device.getPlatform()
+	}
+	console.error('Platform target not detected, detox or appium not detected')
+	return null
+}
+
 /**
  * Creates a screenshot based on android or iOS platform.
  * @param componentPath
  */
-export const takeScreenshot = componentPath => {
-	const platform = device.getPlatform() // detox test runner
+export const takeScreenshot = (componentPath: string) => {
+	const platform: string | null = getDevicePlatform() // appium or detox
+	if (!platform){
+		return
+	}
 
 	if (!existsSync(`${SCREENSHOT_DIR}/${componentPath}`)) {
 		mkdirSync(`${SCREENSHOT_DIR}/${componentPath}`)
@@ -31,13 +47,13 @@ export const takeScreenshot = componentPath => {
 	const screenshotFilename = `${SCREENSHOT_DIR}/${componentPath}/screenshot-${screenshotIndex++}.png`
 	switch (platform) {
 		case 'ios':
-			childProcess.execSync(
+			execSync(
 				`xcrun simctl io booted screenshot ${screenshotFilename}`,
 				SCREENSHOT_OPTIONS,
 			)
 			break
 		case 'android':
-			childProcess.execSync(`adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > ${screenshotFilename}
+			execSync(`adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > ${screenshotFilename}
 `)
 			break
 		default:
@@ -49,7 +65,7 @@ export const takeScreenshot = componentPath => {
  * Creates a pixel diff image which highlights areas that do not match between two images
  * @param componentPath
  */
-export const pixelDiff = componentPath => {
+export const pixelDiff = (componentPath: string, basePath: string, testPath: string) => {
 	const COMPONENT_PATH = `${SCREENSHOT_DIR}/${componentPath}`
 	const img1 = PNG.sync.read(readFileSync(`${COMPONENT_PATH}/screenshot-0.png`))
 	const img2 = PNG.sync.read(readFileSync(`${COMPONENT_PATH}/screenshot-1.png`))
@@ -61,6 +77,7 @@ export const pixelDiff = componentPath => {
 	writeFileSync(`${COMPONENT_PATH}/diff.png`, PNG.sync.write(diff))
 }
 
-export const saveScreenshot = (directory, fileName) => {
+export const saveScreenshot = (directory: string, fileName: string) => {
 	mkdirSync(resolve(directory))
 }
+

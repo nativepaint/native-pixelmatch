@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "@types/node": "^12.7.2",
+    "@types/pixelmatch": "^5.0.0",
+    "@types/pngjs": "^3.3.2",
     "typescript": "^3.5.3"
   }
 }
