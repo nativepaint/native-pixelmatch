@@ -1,7 +1,7 @@
 <div align="center">
   <h1>Native Pixelmatch</h1>
     
-  <p>A simple solution for visual diffing in react-native</p>
+  <p>A simple visual regression solution for react-native</p>
  
 </div>
 
