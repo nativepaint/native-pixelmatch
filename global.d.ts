@@ -7,3 +7,9 @@ interface Device {
 
 declare var device: Device
 declare var driver: Driver
+
+
+interface Global {
+  device: Device
+  driver: Driver
+}
