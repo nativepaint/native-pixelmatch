@@ -12,7 +12,8 @@
 - [Example Output](#Example-Output)
 - [The Problem](#The-Problem)
 - [The Solution](#The-Solution)
-- [How to Use](#How-to-Use)
+- [Installation](#Installation)
+- [Getting Started](#Getting-Started)
 - [Similar Solutions](#Similar-Solutions)
 
 ## The Problem
@@ -34,9 +35,17 @@ Introducing `native-pixelmatch` a lightweight solution for visual regression on 
 | --- | --- | --- |
 | ![](other/ios-1.png) | ![](other/ios-2.png) | ![1diff](other/ios-diff.png) |
 
-## How to Use
+## Installation
 
-**Import native-pixelmatch and save the library's config prototype as a exportable variable
+**npm**
+`npm install --save-dev native-pixelmatch`
+
+**yarn**
+`yarn add -D native-pixelmatch`
+
+## Getting Started
+
+Import native-pixelmatch and save the library's config prototype as a exportable variable
 ```
 import nativePixelMatch from 'native-pixelmatch'
 
