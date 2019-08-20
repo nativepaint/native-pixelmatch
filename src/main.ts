@@ -68,7 +68,7 @@ class Setup {
 	/**
 	 * Creates a screenshot based on android or iOS platform.
 	 */
-	createScreenshot = (identifier: string, subFolder: string, config: Config = this.config) => {
+	createScreenshot = (identifier: string, subFolder: string = '', config: Config = this.config) => {
 		const { savePath, tmpPath, testRunner } = config
 		const platform: string | null = getDevicePlatform(testRunner) // appium or detox
 		if (!platform || !tmpPath){
@@ -78,7 +78,7 @@ class Setup {
 		if (!existsSync(resolve(tmpPath, subFolder))) {
 			mkdirSync(resolve(tmpPath, subFolder))
 		}
-		const file = `${tmpPath}/${subFolder}/${identifier}.png`
+		const file = resolve(tmpPath,subFolder,`${identifier}.png`)
 		switch (platform) {
 			case 'ios':
 				execSync(
@@ -99,7 +99,7 @@ class Setup {
 	 * Creates a pixel diff image which highlights areas that do not match between two images
 	 * can override path using config
 	 */
-	pixelDiff = (name: string, subFolder: string, config: Config = this.config) => {
+	pixelDiff = (name: string, subFolder: string = '', config: Config = this.config) => {
 		const { savePath, tmpPath } = config
 		const filename = `${name}.png`
 		const getSavePath = () => resolve(savePath,subFolder,filename) // TODO make memoization fn
@@ -149,7 +149,7 @@ class Setup {
 
 		pixelMatch(saveImage.data, tmpImage.data, diff.data, width, height, { threshold: 0.1 })
 
-		writeFileSync(`${tmpPath}/${subFolder}/diff-${filename}`, PNG.sync.write(diff))
+		writeFileSync(resolve(tmpPath,subFolder,`diff-${filename}`), PNG.sync.write(diff))
 	}
 }
 
