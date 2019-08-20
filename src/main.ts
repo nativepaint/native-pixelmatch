@@ -144,7 +144,7 @@ class Setup {
       mkdirSync(resolve(savePath, subDir));
     }
 
-    if (!existsSync(resolve(savePath, filename))) {
+    if (!existsSync(getSavePath())) {
       const readStream = createReadStream(getTmpPath());
       const writeStream = createWriteStream(getSavePath());
 
@@ -155,26 +155,9 @@ class Setup {
         unlink(getTmpPath(), () => console.log("unlinked old path"));
       });
 
+      console.log(`Success: Moved ${filename} to saved folder`)
       readStream.pipe(writeStream);
-    }
-
-    if (!existsSync(getSavePath())) {
-      rename(getTmpPath(), getSavePath(), function(err) {
-        if (err) {
-          if (err.code === "EXDEV") {
-            return console.error(
-              "Error EXDEV, looks like you are attempting to rename across partitions",
-              err
-            );
-          } else {
-            console.error(
-              "Error occurred while moving tempFile to screenshot directory",
-              err
-            );
-          }
-          return;
-        }
-      });
+      return
     }
 
     const tmpImage = PNG.sync.read(readFileSync(getTmpPath()));
