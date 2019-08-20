@@ -43,25 +43,26 @@ interface Config {
   savePath: string;
   tmpPath: string;
   testRunner: TestRunner;
+  threshold: number;
 }
 
 class Setup {
-  constructor(
-    tmpPath: string = "tmp",
-    savePath: string = "screenshots",
-    basePath: string = "",
-    testRunner: TestRunner
-  ) {
-    this.config = this.createConfig(tmpPath, savePath, basePath, testRunner);
+  constructor(config: Config) {
+    this.config = this.createConfig(config);
   }
   config: Config;
 
-  createConfig(
-    tmpPath: string,
-    savePath: string,
-    basePath: string,
-    testRunner: TestRunner
-  ): Config {
+  /**
+   * Parses the config and setups up the regressions
+   */
+  createConfig(config: Config): Config {
+    const {
+      basePath = "",
+      savePath = "screenshots",
+      testRunner,
+      threshold = 0.1,
+      tmpPath = "tmp"
+    } = config;
     if (!testRunner) {
       throw new Error(
         "Error: Test Runner not provided, please choose appium or detox"
@@ -82,7 +83,8 @@ class Setup {
       basePath: baseURL,
       savePath: resolve(basePath, savePath),
       testRunner,
-      tmpPath: resolve(basePath, tmpPath)
+      tmpPath: resolve(basePath, tmpPath),
+      threshold
     };
   }
 
@@ -131,7 +133,7 @@ class Setup {
     subDir: string = "",
     config: Config = this.config
   ) => {
-    const { savePath, tmpPath } = config;
+    const { savePath, tmpPath, threshold } = config;
     const filename = `${name}.png`;
     const getSavePath = () => resolve(savePath, subDir, filename); // TODO make memoization fn
     const getTmpPath = () => resolve(tmpPath, subDir, filename); // TODO make memoization fn
@@ -155,9 +157,9 @@ class Setup {
         unlink(getTmpPath(), () => console.log("unlinked old path"));
       });
 
-      console.log(`Success: Moved ${filename} to saved folder`)
+      console.log(`Success: Moved ${filename} to saved folder`);
       readStream.pipe(writeStream);
-      return
+      return;
     }
 
     const tmpImage = PNG.sync.read(readFileSync(getTmpPath()));
@@ -166,7 +168,7 @@ class Setup {
     const diff = new PNG({ width, height });
 
     pixelMatch(saveImage.data, tmpImage.data, diff.data, width, height, {
-      threshold: 0.1
+      threshold
     });
 
     writeFileSync(
