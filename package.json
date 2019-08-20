@@ -1,6 +1,6 @@
 {
   "name": "native-pixelmatch",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A simple visual regression solution for react-native",
   "main": "dist/main.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "diff"
   ],
   "author": "Frederick Engelhardt <support@virtualizellc.com> (https://github.com/FrederickEngelhardt)",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "npm": "^6.10.3",
     "pixelmatch": "^5.0.2",
