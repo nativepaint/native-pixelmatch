@@ -1,6 +1,6 @@
 {
   "name": "native-pixelmatch",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple visual regression solution for react-native",
   "main": "dist/main.js",
   "scripts": {
