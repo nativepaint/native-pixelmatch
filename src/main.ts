@@ -4,20 +4,22 @@ import { resolve } from 'path'
 import pixelMatch from 'pixelmatch'
 import { PNG } from 'pngjs'
 
+type TestRunner = 'appium' | 'detox'
+
 const SCREENSHOT_OPTIONS = {
 	timeout: 1000,
 	killSignal: 'SIGKILL',
 }
 
-
-export const getDevicePlatform = () => {
-	if (device){
-		// detox
-		return device.getPlatform()
-	}
-	if (driver){
+// TODO add better way to detect android vs ios without pulling in Appium/Detox globals
+export const getDevicePlatform = (testRunner: TestRunner) => {
+	if (testRunner === 'appium'){
 		// appium
 		return driver.getCapabilities().getCapability("platformName")
+	}
+	if (testRunner === 'detox'){
+		// detox
+		return device.getPlatform()
 	}
 	console.error('Platform target not detected, detox or appium not detected')
 	return null
@@ -28,18 +30,22 @@ export const saveScreenshot = (directory: string, fileName: string) => {
 }
 
 interface Config {
-	basePath: string,
+	basePath: string
 	savePath: string
-	tmpPath: string,
+	tmpPath: string
+	testRunner: TestRunner
 }
 
 class Setup {
-	constructor(tmpPath: string = 'tmp', savePath: string = 'screenshots', basePath: string = ''){
-		this.config = this.createConfig(tmpPath, savePath, basePath)
+	constructor(tmpPath: string = 'tmp', savePath: string = 'screenshots', basePath: string = '', testRunner: TestRunner){
+		this.config = this.createConfig(tmpPath, savePath, basePath, testRunner)
 	}
 	config: Config
 
-	createConfig(tmpPath: string, savePath: string, basePath: string): Config {
+	createConfig(tmpPath: string, savePath: string, basePath: string, testRunner: TestRunner): Config {
+		if (!testRunner){
+			throw new Error('Error: Test Runner not provided, please choose appium or detox')
+		}
 		if (!existsSync(resolve(basePath))) {
 			mkdirSync(resolve(basePath))
 		}
@@ -54,6 +60,7 @@ class Setup {
 		return {
 			basePath: baseURL,
 			savePath: resolve(basePath,savePath),
+			testRunner,
 			tmpPath: resolve(basePath,tmpPath),
 		}
 	}
@@ -62,8 +69,8 @@ class Setup {
 	 * Creates a screenshot based on android or iOS platform.
 	 */
 	createScreenshot = (identifier: string, subFolder: string, config: Config = this.config) => {
-		const { savePath, tmpPath } = config
-		const platform: string | null = getDevicePlatform() // appium or detox
+		const { savePath, tmpPath, testRunner } = config
+		const platform: string | null = getDevicePlatform(testRunner) // appium or detox
 		if (!platform || !tmpPath){
 			return
 		}
