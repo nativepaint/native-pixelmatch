@@ -68,17 +68,17 @@ class Setup {
 	/**
 	 * Creates a screenshot based on android or iOS platform.
 	 */
-	createScreenshot = (identifier: string, subFolder: string = '', config: Config = this.config) => {
+	createScreenshot = (identifier: string, subDir: string = '', config: Config = this.config) => {
 		const { savePath, tmpPath, testRunner } = config
 		const platform: string | null = getDevicePlatform(testRunner) // appium or detox
 		if (!platform || !tmpPath){
 			return
 		}
 
-		if (!existsSync(resolve(tmpPath, subFolder))) {
-			mkdirSync(resolve(tmpPath, subFolder))
+		if (!existsSync(resolve(tmpPath, subDir))) {
+			mkdirSync(resolve(tmpPath, subDir))
 		}
-		const file = resolve(tmpPath,subFolder,`${identifier}.png`)
+		const file = resolve(tmpPath,subDir,`${identifier}.png`)
 		switch (platform) {
 			case 'ios':
 				execSync(
@@ -99,18 +99,18 @@ class Setup {
 	 * Creates a pixel diff image which highlights areas that do not match between two images
 	 * can override path using config
 	 */
-	pixelDiff = (name: string, subFolder: string = '', config: Config = this.config) => {
+	pixelDiff = (name: string, subDir: string = '', config: Config = this.config) => {
 		const { savePath, tmpPath } = config
 		const filename = `${name}.png`
-		const getSavePath = () => resolve(savePath,subFolder,filename) // TODO make memoization fn
-		const getTmpPath = () => resolve(tmpPath, subFolder, filename) // TODO make memoization fn
+		const getSavePath = () => resolve(savePath,subDir,filename) // TODO make memoization fn
+		const getTmpPath = () => resolve(tmpPath, subDir, filename) // TODO make memoization fn
 
 		if (!existsSync(getTmpPath())){
 			return console.error('Temp file does not exist')
 		}
 
-		if (!existsSync(resolve(savePath,subFolder))) {
-			mkdirSync(resolve(savePath,subFolder))
+		if (!existsSync(resolve(savePath,subDir))) {
+			mkdirSync(resolve(savePath,subDir))
 		}
 
 		if (!existsSync(resolve(savePath,filename))){
@@ -149,7 +149,7 @@ class Setup {
 
 		pixelMatch(saveImage.data, tmpImage.data, diff.data, width, height, { threshold: 0.1 })
 
-		writeFileSync(resolve(tmpPath,subFolder,`diff-${filename}`), PNG.sync.write(diff))
+		writeFileSync(resolve(tmpPath,subDir,`diff-${filename}`), PNG.sync.write(diff))
 	}
 }
 
