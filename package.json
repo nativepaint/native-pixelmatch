@@ -1,13 +1,14 @@
 {
-  "name": "native-pixel-match",
+  "name": "native-pixelmatch",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "tsc": "tsc",
+    "watch": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["react-native", "native", "pixelmatch", "image", "compare", "diff"],
   "author": "",
   "license": "ISC",
   "dependencies": {
