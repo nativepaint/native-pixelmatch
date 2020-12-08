@@ -72,4 +72,4 @@ describe('App', () => {
 
 ## Other Notes:
 - This library uses the lightweight [pixelmatch](https://github.com/mapbox/pixelmatch) library.
-- In the future there will be an option to opt into [GraphicsMagick](http://www.graphicsmagick.org/
+- In the future there will be an option to opt into [GraphicsMagick](http://www.graphicsmagick.org/)
