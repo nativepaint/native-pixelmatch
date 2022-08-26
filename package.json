@@ -20,7 +20,6 @@
   "author": "Frederick Engelhardt <support@virtualizellc.com> (https://github.com/FrederickEngelhardt)",
   "license": "MIT",
   "dependencies": {
-    "npm": "^6.10.3",
     "pixelmatch": "^5.0.2",
     "pngjs": "^3.4.0"
   },
